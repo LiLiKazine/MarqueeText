@@ -4,10 +4,8 @@ A SwiftUI component for creating smooth, continuous scrolling text animations - 
 
 ## Features
 
-- 🎯 **Smooth Animation**: Seamless continuous scrolling with customizable speed
-- 📱 **iOS 15+ Support**: Compatible with modern iOS versions
+- 📱 **iOS 13+ Support**: Compatible with modern iOS versions
 - 🎨 **Customizable**: Support for custom fonts and styling
-- ⚡ **Performance Optimized**: Efficient rendering with minimal resource usage
 - 🔄 **Auto-sizing**: Automatically detects when scrolling is needed
 - 🛠 **SwiftUI Native**: Built specifically for SwiftUI with modern Swift concurrency
 
@@ -86,9 +84,7 @@ MarqueeText automatically:
 
 ## Requirements
 
-- iOS 15.0+
-- Swift 5.9+
-- Xcode 15.0+
+- iOS 13.0+
 
 ## Example App
 
