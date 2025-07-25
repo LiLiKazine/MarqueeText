@@ -5,23 +5,22 @@
 import SwiftUI
 
 public struct MarqueeText: View {
+    
     let text: String
-    let font: Font
     
     @State private var textWidth: CGFloat = 0
     @State private var containerWidth: CGFloat = 0
     @State private var animate: Bool = false
     
-    private let spacing: CGFloat = 60
+    private let marqueeSpacing: CGFloat
 
-    public init(text: String, font: Font = .body) {
+    public init(text: String, marqueeSpacing: CGFloat = 60) {
         self.text = text
-        self.font = font
+        self.marqueeSpacing = marqueeSpacing
     }
     
     private var internalText: some View {
         Text(text)
-            .font(font)
             .lineLimit(1)
     }
     
@@ -34,7 +33,7 @@ public struct MarqueeText: View {
         ZStack(alignment: .leading) {
             internalText
                 .fixedSize(horizontal: true, vertical: false)
-                .offset(x: animate ? -textWidth - spacing : 0)
+                .offset(x: animate ? -textWidth - marqueeSpacing : 0)
                 .animation(
                     animation,
                     value: animate
@@ -43,7 +42,7 @@ public struct MarqueeText: View {
             
             internalText
                 .fixedSize(horizontal: true, vertical: false)
-                .offset(x: animate ? 0 : textWidth + 60)
+                .offset(x: animate ? 0 : textWidth + marqueeSpacing)
                 .animation(
                     animation,
                     value: animate
@@ -78,7 +77,7 @@ public struct MarqueeText: View {
     }
 }
 
-struct ContainerWidthPreferenceKey: PreferenceKey {
+private struct ContainerWidthPreferenceKey: PreferenceKey {
     nonisolated(unsafe) static var defaultValue: CGFloat = 0
     
     static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
@@ -86,7 +85,7 @@ struct ContainerWidthPreferenceKey: PreferenceKey {
     }
 }
 
-struct TextWidthPreferenceKey: PreferenceKey {
+private struct TextWidthPreferenceKey: PreferenceKey {
     nonisolated(unsafe) static var defaultValue: CGFloat = 0
     
     static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
@@ -105,7 +104,7 @@ private extension View {
     }
     
     func readTextWidth() -> some View {
-        self.background(
+        self.overlay(
             GeometryReader { geometry in
                 Color.clear
                     .preference(key: TextWidthPreferenceKey.self, value: geometry.size.width)
@@ -119,16 +118,13 @@ private extension View {
     VStack(alignment: .leading, spacing: 10) {
         MarqueeText(
             text: "测试加长名称+滚动效果测试+赶紧滚动",
-            font: .system(size: 22, weight: .bold)
         )
         
         MarqueeText(
             text: "测试普通名称",
-            font: .system(size: 22, weight: .bold)
         )
-        Spacer()
     }
     .frame(width: 300)
-
+    .font(.system(size: 22, weight: .bold))
 }
 
