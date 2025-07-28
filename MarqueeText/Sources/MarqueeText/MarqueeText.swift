@@ -12,11 +12,11 @@ public struct MarqueeText: View {
     @State private var containerWidth: CGFloat = 0
     @State private var animate: Bool = false
     
-    private let marqueeSpacing: CGFloat
-
-    public init(text: String, marqueeSpacing: CGFloat = 60) {
+    @Environment(\.marqueeSpacing) private var spacing
+    @Environment(\.marqueePausingTime) private var pausingTime
+    
+    public init(text: String) {
         self.text = text
-        self.marqueeSpacing = marqueeSpacing
     }
     
     private var internalText: some View {
@@ -28,12 +28,13 @@ public struct MarqueeText: View {
         
         let animation = Animation
             .linear(duration: animationDuration)
+            .delay(pausingTime)
             .repeatForever(autoreverses: false)
         
         ZStack(alignment: .leading) {
             internalText
                 .fixedSize(horizontal: true, vertical: false)
-                .offset(x: animate ? -textWidth - marqueeSpacing : 0)
+                .offset(x: animate ? -textWidth - spacing : 0)
                 .animation(
                     animation,
                     value: animate
@@ -42,7 +43,7 @@ public struct MarqueeText: View {
             
             internalText
                 .fixedSize(horizontal: true, vertical: false)
-                .offset(x: animate ? 0 : textWidth + marqueeSpacing)
+                .offset(x: animate ? 0 : textWidth + spacing)
                 .animation(
                     animation,
                     value: animate
@@ -77,54 +78,32 @@ public struct MarqueeText: View {
     }
 }
 
-private struct ContainerWidthPreferenceKey: PreferenceKey {
-    nonisolated(unsafe) static var defaultValue: CGFloat = 0
-    
-    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
-        value = nextValue()
-    }
-}
-
-private struct TextWidthPreferenceKey: PreferenceKey {
-    nonisolated(unsafe) static var defaultValue: CGFloat = 0
-    
-    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
-        value = nextValue()
-    }
-}
-
-private extension View {
-    func readContainerWidth() -> some View {
-        self.overlay(
-            GeometryReader { geometry in
-                Color.clear
-                    .preference(key: ContainerWidthPreferenceKey.self, value: geometry.size.width)
-            }
-        )
-    }
-    
-    func readTextWidth() -> some View {
-        self.overlay(
-            GeometryReader { geometry in
-                Color.clear
-                    .preference(key: TextWidthPreferenceKey.self, value: geometry.size.width)
-            }
-        )
-    }
-}
-
-
 #Preview {
-    VStack(alignment: .leading, spacing: 10) {
+    VStack(alignment: .leading, spacing: 18) {
         MarqueeText(
-            text: "测试加长名称+滚动效果测试+赶紧滚动",
+            text: "Everybody Wants To Rule the World - Lorde",
         )
         
         MarqueeText(
-            text: "测试普通名称",
+            text: "Safe & Sound (from \"the Hunger Games\" Soundtrack) [feat. The Civil Wars] - Taylor Swift",
+        )
+        .foregroundColor(.blue)
+        .font(.system(size: 18, weight: .light))
+        
+        MarqueeText(
+            text: "Leave Out All the Rest - LINKIN PARK",
+        )
+        .marqueeSpacing(2)
+        .marqueeSpacing(0)
+        
+        MarqueeText(
+            text: "A Bar Song (Tipsy)",
         )
     }
-    .frame(width: 300)
     .font(.system(size: 22, weight: .bold))
+    .frame(width: 220)
+    .padding(22)
+    .background(Color.secondary.opacity(0.5))
+    .clipShape(.rect(cornerRadius: 8))
 }
 

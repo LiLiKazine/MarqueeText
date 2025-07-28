@@ -10,14 +10,14 @@ import MarqueeText
 
 struct ContentView: View {
     var body: some View {
-        VStack(spacing: 22) {
+        VStack(alignment: .leading, spacing: 22) {
             MarqueeText(
-                text: "测试加长名称+滚动效果测试+赶紧滚动",
+                text: "Old Town Road (feat. Billy Ray Cyrus) [Remix] - Lil Nas X"
             )
             .border(.red)
             
             MarqueeText(
-                text: "测试普通名称",
+                text: "A Bar Song (Tipsy)",
             )
             .border(.green)
         }
