@@ -94,7 +94,7 @@ public struct MarqueeText: View {
             text: "Leave Out All the Rest - LINKIN PARK",
         )
         .marqueeSpacing(2)
-        .marqueeSpacing(0)
+        .marqueePausingTime(0)
         
         MarqueeText(
             text: "A Bar Song (Tipsy)",

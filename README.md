@@ -12,6 +12,10 @@ A SwiftUI component for creating smooth, continuous scrolling text animations - 
 - 🎯 **Smart Animation**: Only animates when text overflows the container
 - 📏 **Adaptive Speed**: Animation speed adjusts based on text length
 
+## Demo
+
+![MarqueeText Demo](demo.gif)
+
 ## Installation
 
 ### Swift Package Manager
