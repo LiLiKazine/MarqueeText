@@ -5,9 +5,12 @@ A SwiftUI component for creating smooth, continuous scrolling text animations - 
 ## Features
 
 - 📱 **iOS 13+ Support**: Compatible with modern iOS versions
-- 🎨 **Customizable**: Support for custom fonts and styling
+- 🎨 **Highly Customizable**: Support for custom fonts, colors, and styling
 - 🔄 **Auto-sizing**: Automatically detects when scrolling is needed
-- 🛠 **SwiftUI Native**: Built specifically for SwiftUI with modern Swift concurrency
+- ⚡ **Environment Support**: Configurable spacing and pausing time via SwiftUI environment
+- 🛠 **SwiftUI Native**: Built specifically for SwiftUI with modern Swift 6 concurrency
+- 🎯 **Smart Animation**: Only animates when text overflows the container
+- 📏 **Adaptive Speed**: Animation speed adjusts based on text length
 
 ## Installation
 
@@ -26,7 +29,7 @@ Or add it to your `Package.swift`:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/LiLiKazine/MarqueeText.git", from: "1.0.0")
+    .package(url: "https://github.com/LiLiKazine/MarqueeText.git", from: "0.0.2")
 ]
 ```
 
@@ -46,41 +49,64 @@ struct ContentView: View {
 }
 ```
 
-### Custom Font
+### With Custom Styling
 
 ```swift
-MarqueeText(
-    text: "Custom styled scrolling text with bold font",
-    font: .system(size: 22, weight: .bold)
-)
-.frame(width: 300)
+MarqueeText(text: "Custom styled scrolling text with bold font")
+    .font(.system(size: 22, weight: .bold))
+    .foregroundColor(.blue)
+    .frame(width: 300)
 ```
 
-### In a List or VStack
+### Environment Configuration
+
+You can customize the marquee behavior using SwiftUI environment values:
 
 ```swift
-VStack(alignment: .leading, spacing: 10) {
-    MarqueeText(
-        text: "First scrolling item with a very long description",
-        font: .headline
-    )
-    .frame(width: 250)
-    
-    MarqueeText(
-        text: "Second item that also scrolls when needed",
-        font: .body
-    )
-    .frame(width: 250)
+VStack {
+    MarqueeText(text: "Custom spacing between text repetitions")
+        .marqueeSpacing(20) // Custom spacing between repeated text
+        
+    MarqueeText(text: "Custom pause duration before animation starts")
+        .marqueePausingTime(2.0) // 2 second pause before scrolling
 }
+```
+
+### Multiple Marquee Texts
+
+```swift
+VStack(alignment: .leading, spacing: 18) {
+    MarqueeText(text: "Everybody Wants To Rule the World - Lorde")
+    
+    MarqueeText(text: "Safe & Sound (from \"the Hunger Games\" Soundtrack) [feat. The Civil Wars] - Taylor Swift")
+        .foregroundColor(.blue)
+        .font(.system(size: 18, weight: .light))
+    
+    MarqueeText(text: "Leave Out All the Rest - LINKIN PARK")
+        .marqueeSpacing(2)
+    
+    MarqueeText(text: "A Bar Song (Tipsy)")
+}
+.font(.system(size: 22, weight: .bold))
+.frame(width: 220)
 ```
 
 ## How It Works
 
 MarqueeText automatically:
-- Measures the text width and container width
+- Measures the text width and container width using SwiftUI's preference system
 - Only animates when text is longer than the container
-- Provides smooth, continuous scrolling animation
-- Adjusts animation speed based on text length
+- Provides smooth, continuous scrolling animation with customizable timing
+- Adjusts animation speed based on text length (minimum 2 seconds, scales with content)
+- Uses multiple text views to create seamless looping effect
+- Supports SwiftUI environment values for global configuration
+
+## Environment Values
+
+MarqueeText supports the following environment values:
+
+- `marqueeSpacing(_:)`: Sets the spacing between repeated text instances (default: 80)
+- `marqueePausingTime(_:)`: Sets the pause duration before animation starts (default: 1 second)
 
 ## Requirements
 
@@ -93,21 +119,23 @@ The repository includes a demo app showing various use cases:
 ```swift
 struct DemoView: View {
     var body: some View {
-        VStack(spacing: 20) {
-            // Short text (no scrolling)
-            MarqueeText(text: "Short text")
-                .frame(width: 300)
-                .border(Color.gray)
+        VStack(alignment: .leading, spacing: 18) {
+            MarqueeText(text: "Everybody Wants To Rule the World - Lorde")
             
-            // Long text (scrolling)
-            MarqueeText(
-                text: "This is a very long text that will demonstrate the smooth scrolling animation effect",
-                font: .system(size: 18, weight: .medium)
-            )
-            .frame(width: 300)
-            .border(Color.gray)
+            MarqueeText(text: "Safe & Sound (from \"the Hunger Games\" Soundtrack) [feat. The Civil Wars] - Taylor Swift")
+                .foregroundColor(.blue)
+                .font(.system(size: 18, weight: .light))
+            
+            MarqueeText(text: "Leave Out All the Rest - LINKIN PARK")
+                .marqueeSpacing(2)
+            
+            MarqueeText(text: "A Bar Song (Tipsy)")
         }
-        .padding()
+        .font(.system(size: 22, weight: .bold))
+        .frame(width: 220)
+        .padding(22)
+        .background(Color.secondary.opacity(0.5))
+        .clipShape(.rect(cornerRadius: 8))
     }
 }
 ```
@@ -116,8 +144,6 @@ struct DemoView: View {
 
 - The component uses SwiftUI's preference system for efficient size calculations
 - Animation only runs when necessary (when text overflows)
-- Optimized for smooth 60fps animations
-- Minimal memory footprint
 
 ## Contributing
 
@@ -125,7 +151,7 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## License
 
-This project is available under the MIT License. See the LICENSE file for more info.
+This project is available under the MIT License. 
 
 ## Author
 
